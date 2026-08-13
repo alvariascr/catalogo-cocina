@@ -225,6 +225,22 @@
   .count{
     color:var(--muted);
     font-size:0.8rem;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .spinner{
+    display:inline-block;
+    width:12px;
+    height:12px;
+    border:2px solid var(--border);
+    border-top-color:var(--brand);
+    border-radius:50%;
+    animation:spin 0.8s linear infinite;
+    flex-shrink:0;
+  }
+  @keyframes spin{
+    to{ transform:rotate(360deg); }
   }
   .sort-select{
     border:1px solid var(--border);
@@ -311,7 +327,7 @@
     <button class="filter-btn" data-cat="accesorios">Accesorios</button>
   </div>
   <div class="toolbar">
-    <div class="count" id="count">Cargando...</div>
+    <div class="count" id="count"><span class="spinner"></span>Cargando productos...</div>
     <select id="sortSelect" class="sort-select">
       <option value="none">Ordenar por</option>
       <option value="asc">Precio: menor a mayor</option>
