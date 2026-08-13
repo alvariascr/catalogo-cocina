@@ -183,19 +183,16 @@
     font-size:0.78rem;
     margin:28px 0 6px;
   }
-  .count{
-    text-align:center;
-    color:var(--muted);
-    font-size:0.85rem;
-    margin-top:6px;
-  }
   .filters{
     display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
+    flex-wrap:nowrap;
+    overflow-x:auto;
     gap:8px;
     max-width:700px;
     margin:14px auto 0;
+    padding:2px 2px 6px;
+    scrollbar-width:thin;
+    -webkit-overflow-scrolling:touch;
   }
   .filter-btn{
     border:1px solid var(--border);
@@ -204,6 +201,8 @@
     padding:6px 14px;
     border-radius:999px;
     font-size:0.82rem;
+    white-space:nowrap;
+    flex-shrink:0;
     cursor:pointer;
     transition:background 0.15s, color 0.15s, border-color 0.15s;
   }
@@ -215,29 +214,26 @@
     border-color:var(--brand);
     color:#fff;
   }
-  .sort-bar{
+  .toolbar{
     display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
     align-items:center;
-    gap:8px;
-    margin-top:10px;
-    font-size:0.82rem;
-    color:var(--muted);
+    justify-content:space-between;
+    gap:10px;
+    max-width:700px;
+    margin:6px auto 0;
   }
-  .sort-btn{
+  .count{
+    color:var(--muted);
+    font-size:0.8rem;
+  }
+  .sort-select{
     border:1px solid var(--border);
     background:var(--card);
     color:var(--text);
-    padding:5px 10px;
+    padding:5px 8px;
     border-radius:8px;
-    font-size:0.8rem;
+    font-size:0.78rem;
     cursor:pointer;
-  }
-  .sort-btn.active{
-    border-color:var(--brand);
-    color:var(--brand-dark);
-    font-weight:600;
   }
   .card-footer{
     display:flex;
@@ -307,7 +303,6 @@
 <header>
   <h1>🍳 Catálogo de Productos</h1>
   <input type="text" id="search" placeholder="Buscar por código o descripción...">
-  <div class="count" id="count">Cargando productos...</div>
   <div class="filters" id="filters">
     <button class="filter-btn active" data-cat="todos">Todos</button>
     <button class="filter-btn" data-cat="ollas">Ollas</button>
@@ -315,10 +310,13 @@
     <button class="filter-btn" data-cat="woks">Woks y Comales</button>
     <button class="filter-btn" data-cat="accesorios">Accesorios</button>
   </div>
-  <div class="sort-bar">
-    Ordenar por precio:
-    <button class="sort-btn" id="sortAsc">Menor a mayor</button>
-    <button class="sort-btn" id="sortDesc">Mayor a menor</button>
+  <div class="toolbar">
+    <div class="count" id="count">Cargando...</div>
+    <select id="sortSelect" class="sort-select">
+      <option value="none">Ordenar por</option>
+      <option value="asc">Precio: menor a mayor</option>
+      <option value="desc">Precio: mayor a menor</option>
+    </select>
   </div>
 </header>
 
@@ -345,8 +343,7 @@ document.addEventListener('DOMContentLoaded', function(){
   var count = document.getElementById('count');
   var grid = document.getElementById('grid');
   var filterBtns = document.querySelectorAll('.filter-btn');
-  var sortAscBtn = document.getElementById('sortAsc');
-  var sortDescBtn = document.getElementById('sortDesc');
+  var sortSelect = document.getElementById('sortSelect');
 
   var activeCategory = 'todos';
   var cards = [];
@@ -484,15 +481,10 @@ document.addEventListener('DOMContentLoaded', function(){
         applyFilters();
       });
     });
-    sortAscBtn.addEventListener('click', function(){
-      sortCards('asc');
-      sortAscBtn.classList.add('active');
-      sortDescBtn.classList.remove('active');
-    });
-    sortDescBtn.addEventListener('click', function(){
-      sortCards('desc');
-      sortDescBtn.classList.add('active');
-      sortAscBtn.classList.remove('active');
+    sortSelect.addEventListener('change', function(){
+      if (sortSelect.value === 'asc' || sortSelect.value === 'desc') {
+        sortCards(sortSelect.value);
+      }
     });
 
     var lightbox = document.getElementById('lightbox');
